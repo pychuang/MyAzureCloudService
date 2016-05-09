@@ -1,4 +1,5 @@
-﻿using Microsoft.ServiceBus.Messaging;
+﻿using Microsoft.Azure;
+using Microsoft.ServiceBus.Messaging;
 using Microsoft.ServiceBus;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,6 @@ namespace FrontendWebRole
         // on every request.
         public static QueueClient OrdersQueueClient;
 
-        // Obtain these values from the portal.
-        public const string Namespace = "mysbns";
-
         // The name of your queue.
         public const string QueueName = "OrdersQueue";
 
@@ -23,11 +21,8 @@ namespace FrontendWebRole
         {
             // Create the namespace manager which gives you access to
             // management operations.
-            var uri = ServiceBusEnvironment.CreateServiceUri(
-                "sb", Namespace, String.Empty);
-            var tP = TokenProvider.CreateSharedAccessSignatureTokenProvider(
-                "RootManageSharedAccessKey", "56+TVzsDhkb+4LOVljT8+x1QpdHe0ZTPUDMJgzdzImk=");
-            return new NamespaceManager(uri, tP);
+            string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+            return NamespaceManager.CreateFromConnectionString(connectionString);
         }
 
         public static void Initialize()
