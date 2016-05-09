@@ -16,6 +16,7 @@ namespace FrontendWebRole
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            FrontendWebRole.QueueConnector.Initialize();
         }
     }
 }

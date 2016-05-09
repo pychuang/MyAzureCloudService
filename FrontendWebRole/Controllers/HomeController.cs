@@ -28,7 +28,13 @@ namespace FrontendWebRole.Controllers
         // form.
         public ActionResult Submit()
         {
-            // Will put code for displaying queue message count here.
+            // Get a NamespaceManager which allows you to perform management and
+            // diagnostic operations on your Service Bus queues.
+            var namespaceManager = QueueConnector.CreateNamespaceManager();
+
+            // Get the queue, and obtain the message count.
+            var queue = namespaceManager.GetQueue(QueueConnector.QueueName);
+            ViewBag.MessageCount = queue.MessageCount;
 
             return View();
         }
@@ -44,8 +50,11 @@ namespace FrontendWebRole.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Will put code for submitting to queue here.
+                // Create a message from the order.
+                var message = new BrokeredMessage(order);
 
+                // Submit the order.
+                QueueConnector.OrdersQueueClient.Send(message);
                 return RedirectToAction("Submit");
             }
             else
